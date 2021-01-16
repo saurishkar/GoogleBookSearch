@@ -15,12 +15,14 @@ class Home extends React.Component {
 
   fetchImages() {
     const { searchQuery } = this.state;
-    fetch(`https://api.imgur.com/3/gallery/search?q=${searchQuery}`)
+
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=flowers`)
     .then((response) => {
-      this.setState({
-        images: Object.assign({} , this.state.images, response.images)
+      response.json().then((data) => {
+        this.setState({
+          images: [].concat(this.state.images, data.items)
+        });
       });
-      return response.images;
     });
   }
 
@@ -31,6 +33,7 @@ class Home extends React.Component {
   }
 
   render() {
+    console.log(this.state.images);
     return <View>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -38,11 +41,13 @@ class Home extends React.Component {
         value={this.state.searchQuery}
       />
       <Button title="Search" onPress={this.fetchImages} />
-      {this.state.images.map(({ id, link }) => {
-        return <View key={id}>
-          <img src={link} />
-        </View>
-      })}
+      <View style={{ display: ""}}>
+        {this.state.images.map(({ id, volumeInfo }) => {
+          return <View key={id} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <img src={volumeInfo.imageLinks.thumbnail} />
+          </View>
+        })}
+      </View>
     </View>
   }
 }
