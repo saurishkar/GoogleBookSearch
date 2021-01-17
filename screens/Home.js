@@ -1,55 +1,150 @@
 import React from "react";
-import { View, Text, Button, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  StyleSheet,
+  Image,
+  FlatList,
+  Pressable,
+  ScrollView
+} from "react-native";
+
+import Book from "../components/Book";
+
+import { mockData } from "../constants/book";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       searchQuery: "",
-      images: []
+      books: [],
+      currentBook: null,
+      isLoading: false
     };
 
     this.fetchImages = this.fetchImages.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.renderItem = this.renderItem.bind(this);
+    this.viewBook = this.viewBook.bind(this);
   }
 
   fetchImages() {
     const { searchQuery } = this.state;
 
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=flowers`)
-    .then((response) => {
-      response.json().then((data) => {
-        this.setState({
-          images: [].concat(this.state.images, data.items)
-        });
+    // fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`)
+    // .then((response) => {
+    // response.json().then((data) => {
+    setTimeout(() => {
+      this.setState({
+        // images: [].concat(this.state.images, data.items),
+        books: mockData,
       });
-    });
+    }, 3000);
+    // });
+    // });
   }
 
   handleInputChange(text) {
     this.setState({
-      searchQuery: text
+      searchQuery: text,
     });
   }
 
-  render() {
-    console.log(this.state.images);
-    return <View>
-      <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={this.handleInputChange}
-        value={this.state.searchQuery}
-      />
-      <Button title="Search" onPress={this.fetchImages} />
-      <View style={{ display: ""}}>
-        {this.state.images.map(({ id, volumeInfo }) => {
-          return <View key={id} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <img src={volumeInfo.imageLinks.thumbnail} />
-          </View>
-        })}
+  viewBook(bookId) {
+    this.setState(({ books }) => {
+      return {
+        currentBook: books.find(({ id }) => id === bookId)
+      }
+    });
+  }
+
+  renderItem({ item: { id, volumeInfo } }) {
+    return (
+      <View key={id} style={styles.bookContainer}>
+        <Pressable onPress={() => this.viewBook(id)}>
+          <Image
+            style={styles.image}
+            source={{ uri: volumeInfo.imageLinks.thumbnail }}
+          />
+        </Pressable>
       </View>
-    </View>
+    );
+  }
+
+  render() {
+    const { currentBook, books, searchQuery } = this.state;
+    console.log(123, currentBook);
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={this.handleInputChange}
+            value={searchQuery}
+          />
+          <Button
+            title="Search"
+            onPress={this.fetchImages}
+            style={styles.searchBtn}
+          />
+          <View style={styles.bookList}>
+            <FlatList
+              data={books}
+              renderItem={this.renderItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+            />
+          </View>
+          {currentBook && <Book {...currentBook} />}
+        </ScrollView>
+      </View>
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "90%",
+    paddingLeft: 20,
+    paddingRight: 20,
+    margin: "auto",
+    textAlign: "center",
+    top: 0,
+  },
+  textInput: {
+    width: "100%",
+    padding: 10,
+    marginBottom: 5,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 0,
+  },
+  searchBtn: {
+    margin: "auto",
+    justifyContent: "center",
+  },
+  bookList: {
+    width: "100%",
+    height: 200,
+    // display: "flex",
+    // flexDirection: "row",
+    // alignItems: "center",
+    // overflow: "scroll",
+  },
+  bookContainer: {
+    width: "auto",
+    position: "relative",
+    marginRight: 20,
+    // flexBasis: "auto",
+  },
+  image: {
+    height: 200,
+    width: 130,
+  },
+});
 
 export default Home;
