@@ -1,12 +1,20 @@
 {
-  "name": "ImageFactory",
-  "displayName": "ImageFactory",
+  "name": "GoogleBookSearch",
+  "displayName": "GoogleBookSearch",
   "expo": {
-    "name": "ImageFactory",
-    "slug": "ImageFactory",
+    "name": "GoogleBookSearch",
+    "slug": "GoogleBookSearch",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "awesomenessinc.googlebooksearch",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "awesomenessinc.googlebooksearch",
+      "versionCode": 1
+    }
   }
 }
