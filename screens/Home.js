@@ -2,14 +2,14 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
   TextInput,
   StyleSheet,
   Image,
   FlatList,
   Pressable,
-  ScrollView
+  ScrollView,
 } from "react-native";
+import { Button } from "react-native-paper";
 
 import Book from "../components/Book";
 
@@ -22,12 +22,13 @@ class Home extends React.Component {
       searchQuery: "",
       books: [],
       currentBook: null,
-      isLoading: false
+      isLoading: false,
     };
 
     this.fetchImages = this.fetchImages.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.toggleLoader = this.toggleLoader.bind(this);
     this.viewBook = this.viewBook.bind(this);
   }
 
@@ -37,10 +38,12 @@ class Home extends React.Component {
     // fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`)
     // .then((response) => {
     // response.json().then((data) => {
+    this.toggleLoader(true);
     setTimeout(() => {
       this.setState({
         // images: [].concat(this.state.images, data.items),
         books: mockData,
+        isLoading: false,
       });
     }, 3000);
     // });
@@ -53,11 +56,15 @@ class Home extends React.Component {
     });
   }
 
+  toggleLoader(isLoading = false) {
+    this.setState({ isLoading });
+  }
+
   viewBook(bookId) {
     this.setState(({ books }) => {
       return {
-        currentBook: books.find(({ id }) => id === bookId)
-      }
+        currentBook: books.find(({ id }) => id === bookId),
+      };
     });
   }
 
@@ -75,7 +82,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const { currentBook, books, searchQuery } = this.state;
+    const { currentBook, books, searchQuery, isLoading } = this.state;
     console.log(123, currentBook);
     return (
       <View style={styles.container}>
@@ -85,11 +92,9 @@ class Home extends React.Component {
             onChangeText={this.handleInputChange}
             value={searchQuery}
           />
-          <Button
-            title="Search"
-            onPress={this.fetchImages}
-            style={styles.searchBtn}
-          />
+          <Button onPress={this.fetchImages} style={styles.searchBtn} loading={isLoading}>
+            Search
+          </Button>
           <View style={styles.bookList}>
             <FlatList
               data={books}

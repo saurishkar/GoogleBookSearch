@@ -92,7 +92,7 @@ const Book = ({ volumeInfo = {} }) => {
           <Text style={styles.title}>{title}</Text>
           <View style={styles.grid}>
             <Text style={{ marginRight: 20 }}>Authors: </Text>
-            {(authors || []).map((author) => <Text style={styles.author}>{author.toUpperCase()},</Text>)}
+            {(authors || []).map((author) => <Text style={styles.author} key={author}>{author.toUpperCase()},</Text>)}
           </View>
           <View style={styles.grid}>
             <Text style={{ marginRight: 10 }}>Publisher:</Text>
