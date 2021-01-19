@@ -35,15 +35,16 @@ class Books extends React.Component {
   fetchImages() {
     const { searchQuery } = this.state;
     this.toggleLoader(true);
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`)
-    .then((response) => {
-      response.json().then((data) => {
-        this.setState(({ books }) => ({
-          books: [].concat(books, data.items),
-          isLoading: false,
-        }));
-      });
-    });
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`).then(
+      (response) => {
+        response.json().then((data) => {
+          this.setState(({ books }) => ({
+            books: data.items,
+            isLoading: false,
+          }));
+        });
+      }
+    );
   }
 
   handleInputChange(text) {
@@ -79,6 +80,8 @@ class Books extends React.Component {
 
   render() {
     const { currentBook, books, searchQuery, isLoading } = this.state;
+    const btnDisabled = !searchQuery.trim();
+    // const btnStyle = Object.assign({}, styles.searchBtn, btnDisabled ? styles.btnDisabled : {});
     return (
       <View style={styles.container}>
         <Searchbar
@@ -87,7 +90,15 @@ class Books extends React.Component {
           onChangeText={this.handleInputChange}
           value={searchQuery}
         />
-        <Button onPress={this.fetchImages} style={styles.searchBtn} loading={isLoading} mode="contained">
+        <Button
+          onPress={this.fetchImages}
+          color="#1ABC9C"
+          style={styles.searchBtn}
+          labelStyle={styles.btnLabel}
+          loading={isLoading}
+          mode="contained"
+          disabled={btnDisabled}
+        >
           Search
         </Button>
         <ScrollView>
@@ -125,7 +136,9 @@ const styles = StyleSheet.create({
   searchBtn: {
     margin: "auto",
     justifyContent: "center",
-    backgroundColor: "#1ABC9C"
+  },
+  btnLabel: {
+    color: "#FFFFFF"
   },
   bookList: {
     width: "100%",
