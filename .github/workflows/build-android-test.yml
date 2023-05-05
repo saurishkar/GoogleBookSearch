@@ -24,7 +24,7 @@ jobs:
 
     - name: Install node modules
       run: |
-        yarn install
+        yarn install --ignore-engines
 
     - name: Make Gradlew Executable
       run: cd android && chmod +x ./gradlew
