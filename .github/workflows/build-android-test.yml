@@ -36,7 +36,7 @@ jobs:
       run: cd android && chmod +x ./gradlew
 
     - name: Build Android App Bundle
+      env:
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       run: bundle exec fastlane android beta
-      env: |
-          FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }}
