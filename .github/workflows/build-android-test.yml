@@ -35,4 +35,4 @@ jobs:
       run: cd android && chmod +x ./gradlew
 
     - name: Build Android App Bundle
-      run: bundle exec fastlane android distribute
+      run: bundle exec fastlane android beta
