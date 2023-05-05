@@ -17,18 +17,25 @@ platform :android do
         gradle(task: 'clean', project_dir: './android')
         gradle(task: 'bundle', bundle_type: 'Release', project_dir: './android')
         supply(track: 'beta', abb: './android/app/build/outputs/apk/app-beta-release.apk')
+        firebase_app_distribution(
+          app: "1:996874237495:android:157144b7bd3664364f71b2",
+          testers: "saurish@snackmagic.com",
+          firebase_cli_token: ENV["FIREBASE_TOKEN"],
+          release_notes: "Lots of amazing new features to test out!"
+        )
     end
-    desc "Release for the Android production"
-    lane : release do
-        increment_version_code(app_project_dir: './android/app')
-        increment_version_name(app_project_dir: './android/app', bump_type: 'patch')
-        gradle(task: 'clean', project_dir: './android/')
-        gradle(task: 'bundle', bundle_type: 'Release', project_dir: './andriod', properties: {
-            "android.injected.signing.store.file" => ENV['ANDROID_KEYSTORE_FILE'],
-            "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
-            "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
-            "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
-        })
-        supply(track: 'production', aab: './android/app/build/outputs/bundle/release/app_release.aab', release_status: 'draft')
-    end
+
+#     desc "Release for the Android production"
+#     lane : release do
+#         increment_version_code(app_project_dir: './android/app')
+#         increment_version_name(app_project_dir: './android/app', bump_type: 'patch')
+#         gradle(task: 'clean', project_dir: './android/')
+#         gradle(task: 'bundle', bundle_type: 'Release', project_dir: './andriod', properties: {
+#             "android.injected.signing.store.file" => ENV['ANDROID_KEYSTORE_FILE'],
+#             "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
+#             "android.injected.signing.key.alias" => ENV['ANDROID_KEYSTORE_ALIAS'],
+#             "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD']
+#         })
+#         supply(track: 'production', aab: './android/app/build/outputs/bundle/release/app_release.aab', release_status: 'draft')
+#     end
 end
