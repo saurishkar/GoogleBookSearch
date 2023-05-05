@@ -18,7 +18,7 @@ platform :android do
         gradle(task: 'bundle', bundle_type: 'Release', project_dir: './android')
         supply(track: 'beta', abb: './android/app/build/outputs/apk/app-beta-release.apk')
         firebase_app_distribution(
-          app: "1:996874237495:android:157144b7bd3664364f71b2",
+          app: ENV["FIREBASE_APP_ID"],
           testers: "saurish@snackmagic.com",
           firebase_cli_token: ENV["FIREBASE_TOKEN"],
           release_notes: "Lots of amazing new features to test out!"
